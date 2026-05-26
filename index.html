@@ -871,6 +871,16 @@ function init() {
   document.body.addEventListener('pointercancel', releaseZoom);
   document.body.addEventListener('pointerleave',  releaseZoom);
 
+  // animate cover-twenty image
+  const coverTwentyImg = document.querySelector('.cover-twenty');
+  if (coverTwentyImg) {
+    let alt = false;
+    setInterval(() => {
+      alt = !alt;
+      coverTwentyImg.src = alt ? 'twenty1.png' : 'twenty.png';
+    }, 500);
+  }
+
   // veli animation
   const veliImg = document.getElementById('veli-anim');
   if (veliImg) {
