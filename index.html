@@ -30,7 +30,6 @@
       touch-action: none;
     }
 
-    /* soft warm dots background */
     body::before {
       content: '';
       position: fixed; inset: 0;
@@ -47,17 +46,14 @@
       position: relative; z-index: 1;
     }
 
-    /* ── BOOK CONTAINER ── */
     .book-wrap {
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      /* extra space at bottom for nav */
       padding-bottom: 56px;
     }
 
-    /* ── THE BOOK (two pages side by side) ── */
     .book {
       position: relative;
       width: min(92vw, 820px);
@@ -65,7 +61,7 @@
       transform-style: preserve-3d;
     }
 
-    /* ── COVER (half width, centred) ── */
+    /* ── COVER ── */
     .cover-wrap {
       position: absolute; inset: 0;
       display: flex; align-items: center; justify-content: center;
@@ -96,12 +92,7 @@
       pointer-events: none;
     }
     .cover-spine {
-      width: 14px;
-      height: 100%;
-      background: linear-gradient(to right, #d48090, #c06070);
-      border-radius: 4px 0 0 4px;
-      box-shadow: inset -3px 0 8px rgba(0,0,0,.15);
-      flex-shrink: 0;
+      display: none;
     }
     .cover-content {
       display: flex; flex-direction: column;
@@ -133,13 +124,11 @@
       opacity: .3; pointer-events: none; user-select: none;
     }
 
-    /* ── SPREADS (two pages) ── */
+    /* ── SPREADS ── */
     .spread-stack {
       position: absolute; inset: 0;
       pointer-events: none;
     }
-
-    /* Each spread sits flat; we rotate it on the Y axis to simulate page flip */
     .spread {
       position: absolute; inset: 0;
       display: flex;
@@ -151,7 +140,7 @@
       opacity: 1; pointer-events: all;
     }
 
-    /* ── PAGE HALVES ── */
+    /* ── PAGES ── */
     .page {
       flex: 1; position: relative; overflow: hidden;
       display: flex; flex-direction: column;
@@ -168,8 +157,6 @@
       border-radius: 0 12px 12px 0;
       box-shadow: inset 5px 0 14px -5px var(--shadow);
     }
-
-    /* paper texture */
     .page::before {
       content: '';
       position: absolute; inset: 0;
@@ -177,72 +164,221 @@
       pointer-events: none; z-index: 0;
     }
 
-    /* last spread left page custom styling */
-    .spread:last-child .page.left {
-      background: #fae1e6;
-      background-image: radial-gradient(circle, #5a4642 1.5px, transparent 1.5px);
-      background-size: 14px 14px;
+    /* ── ENVELOPES SPREAD – special page styles ── */
+    .page.envelopes-left {
+      background: repeating-linear-gradient(
+        135deg,
+        #fde8f0 0px,   #fde8f0 6px,
+        #fef0e0 6px,   #fef0e0 12px,
+        #e8f4fd 12px,  #e8f4fd 18px,
+        #f0fde8 18px,  #f0fde8 24px,
+        #f8e8fd 24px,  #f8e8fd 30px,
+        #fdf4e0 30px,  #fdf4e0 36px
+      ) !important;
+      box-shadow: inset -5px 0 14px -5px var(--shadow);
+      border-radius: 12px 0 0 12px;
+    }
+    .page.envelopes-right {
+      background: repeating-linear-gradient(
+        135deg,
+        #fde8f0 0px,   #fde8f0 6px,
+        #fef0e0 6px,   #fef0e0 12px,
+        #e8f4fd 12px,  #e8f4fd 18px,
+        #f0fde8 18px,  #f0fde8 24px,
+        #f8e8fd 24px,  #f8e8fd 30px,
+        #fdf4e0 30px,  #fdf4e0 36px
+      ) !important;
+      border-radius: 0 12px 12px 0;
     }
 
     /* first spread left page with background image */
     .spread:first-of-type .page.left {
-      background: url('page1l.png') center/cover no-repeat;
+      background: url('page1l.png') center/cover no-repeat !important;
     }
 
-    /* second last and last spread images larger */
-    .spread:nth-last-of-type(2) .book-img,
-    .spread:last-of-type .book-img {
-      max-width: 350px;
-    }
-    /* dubai1.png smaller */
-    img[src="dubai1.png"] {
-      max-width: 100px !important;
-      display: block;
-      margin: 0 auto;
+    /* last spread left page custom styling */
+    .spread:last-of-type .page.left {
+      background: #fae1e6;
+      background-image: radial-gradient(circle, #5a4642 1.5px, transparent 1.5px);
+      background-size: 14px 14px;
+      box-shadow: inset -5px 0 14px -5px var(--shadow);
+      border-radius: 12px 0 0 12px;
     }
 
+    /* second last spread (envelopes) custom styling */
+    .spread:nth-last-of-type(2) .page.left {
+      background: repeating-linear-gradient(
+        90deg,
+        #fffafa 0px,
+        #fffafa 20px,
+        #c2e2ef 5px,
+        #c2e2ef 23px
+      ) !important;
+      box-shadow: inset -5px 0 14px -5px var(--shadow);
+      border-radius: 12px 0 0 12px;
+    }
+    .spread:nth-last-of-type(2) .page.right {
+      background: #fceadf !important;
+      border-radius: 0 12px 12px 0;
+    }
 
-    /* ─── PAGE FLIP ANIMATION ─── */
-    /* Flip forward: current page folds away to the left */
-    @keyframes flipOut {
-      0%   { transform: rotateY(0deg);   opacity:1; }
-      100% { transform: rotateY(-90deg); opacity:0; }
+    /* spine line */
+    .book::after {
+      content: '';
+      position: absolute;
+      left: 50%; top: 3%; height: 94%;
+      width: 3px;
+      transform: translateX(-50%);
+      background: linear-gradient(to bottom, transparent, var(--blush) 20%, var(--blush) 80%, transparent);
+      pointer-events: none;
+      z-index: 12;
     }
-    /* incoming page unfolds from right */
-    @keyframes flipIn {
-      0%   { transform: rotateY(90deg);  opacity:0; }
-      100% { transform: rotateY(0deg);   opacity:1; }
-    }
-    /* flip backward */
-    @keyframes flipOutBack {
-      0%   { transform: rotateY(0deg);  opacity:1; }
-      100% { transform: rotateY(90deg); opacity:0; }
-    }
-    @keyframes flipInBack {
-      0%   { transform: rotateY(-90deg); opacity:0; }
-      100% { transform: rotateY(0deg);   opacity:1; }
-    }
+
+    /* ── PAGE FLIP ── */
+    @keyframes flipOut      { 0%{transform:rotateY(0deg);opacity:1}   100%{transform:rotateY(-90deg);opacity:0} }
+    @keyframes flipIn       { 0%{transform:rotateY(90deg);opacity:0}  100%{transform:rotateY(0deg);opacity:1}  }
+    @keyframes flipOutBack  { 0%{transform:rotateY(0deg);opacity:1}   100%{transform:rotateY(90deg);opacity:0} }
+    @keyframes flipInBack   { 0%{transform:rotateY(-90deg);opacity:0} 100%{transform:rotateY(0deg);opacity:1}  }
 
     .flip-out      { animation: flipOut     .3s ease-in  forwards; }
     .flip-in       { animation: flipIn      .3s ease-out forwards; animation-delay:.28s; }
     .flip-out-back { animation: flipOutBack .3s ease-in  forwards; }
     .flip-in-back  { animation: flipInBack  .3s ease-out forwards; animation-delay:.28s; }
 
-    /* ── IMAGES: press-and-hold to zoom ── */
+    /* ── IMAGES: press-and-hold ── */
     .book-img {
-      width: 100%; max-width: 280px;
+      width: 100%; max-width: 200px;
       height: auto; border-radius: 8px;
       display: block;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
-      transition: transform .25s cubic-bezier(.22,.68,0,1.35),
-                  box-shadow .25s;
+      transition: transform .25s cubic-bezier(.22,.68,0,1.35), box-shadow .25s;
       cursor: pointer;
       position: relative; z-index: 1;
     }
     .book-img.held {
       transform: scale(1.18);
+      box-shadow: 8px 12px 36px rgba(60,20,30,.3);
     }
+
+    /* ── VELI mini photo on left ── */
+    .veli-mini-img {
+      width: 100%;
+      max-width: 100px;
+      height: auto;
+      box-shadow: 3px 5px 18px var(--shadow);
+      display: block;
+      position: relative; z-index: 1;
+    }
+    .veli-caption {
+      font-size: clamp(.5rem, 1.9vw, .72rem);
+      color: var(--mauve);
+      text-align: center;
+      margin-top: 10px;
+      line-height: 1.5;
+      font-style: italic;
+      position: relative; z-index: 1;
+    }
+
+    /* ── ENVELOPES list ── */
+    .envelopes-title {
+      font-size: clamp(.6rem, 2.2vw, .85rem);
+      color: var(--rose);
+      text-align: center;
+      margin-bottom: 10px;
+      position: relative; z-index: 1;
+    }
+    .envelopes-title.verse {
+      font-size: clamp(.45rem, 1.4vw, .6rem);
+      color: var(--mauve);
+      font-style: italic;
+      margin-top: 14px;
+    }
+    .envelopes-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 8px;
+      width: 100%;
+      max-width: 200px;
+      margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+    .envelope-item:nth-child(5) {
+      grid-column: 1 / -1;
+      justify-self: center;
+    }
+    .envelope-item {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      transition: transform .2s cubic-bezier(.22,.68,0,1.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .envelope-item:active { transform: scale(.93); }
+    .envelope-img {
+      width: clamp(58px, 9vw, 78px);
+      height: auto;
+      display: block;
+      transition: transform .25s cubic-bezier(.22,.68,0,1.35);
+    }
+    .envelope-item.open .envelope-img {
+      transform: scale(1.08);
+    }
+
+    /* ── LETTER POPUP ── */
+    .letter-overlay {
+      position: fixed; inset: 0;
+      background: rgba(40,10,20,.55);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s;
+    }
+    .letter-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .letter-popup {
+      position: relative;
+      max-width: min(88vw, 480px);
+      max-height: 82vh;
+      transform: scale(.85);
+      transition: transform .3s cubic-bezier(.22,.68,0,1.35);
+    }
+    .letter-overlay.visible .letter-popup {
+      transform: scale(1);
+    }
+    .letter-popup img {
+      width: 100%;
+      height: auto;
+      max-height: 78vh;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 12px 48px rgba(40,10,20,.4);
+      display: block;
+    }
+    .letter-close {
+      position: absolute;
+      top: -14px; right: -14px;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: var(--rose);
+      color: #fff;
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 3px 10px var(--shadow);
+      font-family: sans-serif;
+      line-height: 1;
+      z-index: 201;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .letter-close:active { transform: scale(.88); }
 
     /* ── TYPOGRAPHY ── */
     .section-title {
@@ -262,17 +398,14 @@
       position: relative; z-index:1;
     }
 
-    /* ── WRAPPED (no cards, plain list) ── */
+    /* ── WRAPPED ── */
     .wrapped-plain {
       list-style: none;
       display: flex; flex-direction: column; gap: 14px;
       width: 100%;
       position: relative; z-index:1;
     }
-    .wrapped-plain li {
-      text-align: center;
-      line-height: 1.5;
-    }
+    .wrapped-plain li { text-align: center; line-height: 1.5; }
     .wrapped-plain .wnum {
       display: block;
       font-size: clamp(.9rem, 3.2vw, 1.35rem);
@@ -288,12 +421,6 @@
     }
 
     /* ── SIGNATURE ── */
-    .sig-img {
-      width: 100%; max-width: 100px;
-      height: auto; border-radius: 8px;
-      display: block; margin-bottom: 10px;
-      position: relative; z-index:1;
-    }
     .sig-text {
       font-size: clamp(.72rem, 2.8vw, 1rem);
       color: var(--mauve); text-align: center; line-height: 1.9;
@@ -340,7 +467,7 @@
     /* ── CONFETTI ── */
     @keyframes confettiFall {
       0%  { transform: translateY(-20px) rotate(0deg); opacity:1; }
-      100%{ transform: translateY(100vh)  rotate(720deg); opacity:0; }
+      100%{ transform: translateY(100vh) rotate(720deg); opacity:0; }
     }
     .confetti-piece {
       position: fixed; border-radius: 2px;
@@ -350,18 +477,27 @@
 
     /* ── MOBILE ── */
     @media (max-width: 580px) {
-      /* Show both pages side by side — she can pinch-zoom to read */
       .book { height: min(60vh, 420px); }
       .page { padding: 14px 10px; }
       .cover-spine { display: none; }
       .cover-card { width: 72%; border-radius: 12px; }
+      .book::after { display: none; }
     }
   </style>
 </head>
 <body>
 <div id="app"></div>
+
+<!-- Letter popup (shared, outside book) -->
+<div class="letter-overlay" id="letter-overlay">
+  <div class="letter-popup" id="letter-popup">
+    <button class="letter-close" id="letter-close">✕</button>
+    <img id="letter-img" src="" alt="letter" />
+  </div>
+</div>
+
 <script>
-// ── helpers ────────────────────────────────
+// ── helpers ──────────────────────────────────────────────────
 function daysBetween(dateStr) {
   const past = new Date(dateStr);
   const now  = new Date();
@@ -387,44 +523,89 @@ function launchConfetti() {
   }
 }
 
-// ── spreads data ───────────────────────────
+// ── letter popup logic ───────────────────────────────────────
+const overlay   = document.getElementById('letter-overlay');
+const letterImg = document.getElementById('letter-img');
+const closeBtn  = document.getElementById('letter-close');
+
+function showLetter(src) {
+  letterImg.src = src;
+  overlay.classList.add('visible');
+}
+function hideLetter() {
+  overlay.classList.remove('visible');
+  setTimeout(() => { letterImg.src = ''; }, 300);
+}
+closeBtn.addEventListener('click', hideLetter);
+overlay.addEventListener('click', e => {
+  if (e.target === overlay) hideLetter();
+});
+
+// ── envelope state ───────────────────────────────────────────
+// 0 = closed, 1 = open (showing envelopeN.png), 2 = letter shown once (still open)
+const envelopeState = [0, 0, 0, 0, 0];
+const openSrcs   = ['envelope1.png','envelope2.png','envelope3.png','envelope4.png','envelope5.png'];
+const letterSrcs = ['letter1.png',  'letter2.png',  'letter3.png',  'letter4.png',  'letter5.png' ];
+
+function handleEnvelopeTap(idx) {
+  const state = envelopeState[idx];
+  const item  = document.getElementById(`env-item-${idx}`);
+  const img   = document.getElementById(`env-img-${idx}`);
+
+  if (state === 0) {
+    // closed → open
+    envelopeState[idx] = 1;
+    item.classList.add('open');
+    img.src = openSrcs[idx];
+  } else {
+    // open → show letter popup
+    showLetter(letterSrcs[idx]);
+  }
+}
+
+// ── spreads data ─────────────────────────────────────────────
 const spreads = [
+  // 1 — BIRTHDAY MESSAGE
   {
     id: 'message',
     leftHTML: `
       <img class="book-img" src="images.png"
-           onerror="this.style.cssText='font-size:3.5rem;display:flex;align-items:center;justify-content:center;width:320px;height:400px;border-radius:10px'"
-           alt="page 1" />
+           onerror="this.style.cssText='font-size:3.5rem;background:linear-gradient(135deg,#fce8f0,#fde8d8);display:flex;align-items:center;justify-content:center;width:160px;height:200px;border-radius:10px'"
+           alt="📸" />
       <p class="verse-block" style="margin-top:12px">
         I thank my God in all my remembrance of you,<br>
-        Philippians 1:3
+        — Philippians 1:3
       </p>`,
     rightHTML: `
-      <h2 class="section-title">HBD Veliiii 🎂</h2>
+      <h2 class="section-title">Dear, Veli 🎂</h2>
       <p class="body-text">
-        Marvelly,<br><br>
-        Turning 20 is a big deal — and you deserve every single bit of joy
-        this year has to offer. You're one of those rare people who makes
-        the world a little warmer just by being in it. 🌷<br><br>
-        May this new chapter be filled with laughter, purpose, and all the
-        good things God has already written for you.<br><br>
-        I'm really glad I get to be your friend. Happy birthday, truly. 🎉
+        Thank you for being such a kind friend to me. I'm beyond grateful to have you as a friend and sister :).<br>
+        20 is a huge milestone. If I can be honest, the years ahead won't be easy.<br>
+        Ppl say 18 is the entrance to adulthood, but I think 20 is when you rly start to feel the weight of responsibilities and decisions.<br>
+        But I pray and believe that you have the strength and wisdom to navigate through it all beautifully.<br>
+        Remember to put God first in everything you do. Read His Word daily for wisdom and guidance.<br>
+        <br>
+        Wishing u all the joy, blessings, and love. *I'm always only one call away wkwkwk<br>
+        <br>
+        Happy 20th Birthday, Veli!! 🎉🎈
       </p>`
   },
+
+  // 2 — WRAPPED
   {
     id: 'wrapped',
     leftHTML: `
       <img class="book-img" src="images2.png"
-           onerror="this.style.cssText='font-size:3.5rem;display:flex;align-items:center;justify-content:center;width:160px;height:200px;border-radius:10px'"
+           onerror="this.style.cssText='font-size:3.5rem;background:linear-gradient(135deg,#fce8f0,#fde8d8);display:flex;align-items:center;justify-content:center;width:160px;height:200px;border-radius:10px'"
            alt="📸" />
-           <p class="verse-block" style="margin-top:12px">
-                The Lord bless you and keep you;<br>
-                the Lord make his face to shine upon you and be gracious to you;<br>
-                the Lord lift up his countenance[a] upon you and give you peace.<br>
-                Numbers 6:24–26
-            </p>`,
+      <p class="verse-block" style="margin-top:12px">
+        The Lord bless you and keep you;<br>
+        the Lord make his face to shine upon you<br>
+        and be gracious to you;<br>
+        — Numbers 6:24–26
+      </p>`,
     rightHTML: `
-      <h2 class="section-title">Your 20 y.0., Wrapped</h2>
+      <h2 class="section-title">Your 20 y.o., Wrapped</h2>
       <ul class="wrapped-plain" id="wrapped-list"></ul>`,
     onMount() {
       const list = document.getElementById('wrapped-list');
@@ -441,31 +622,70 @@ const spreads = [
           <span class="wnum">${it.num}</span>
           <span class="wlabel">${it.label}</span>
         </li>
-        ${i < items.length-1 ? '<hr class="wrapped-divider" />' : ''}
+        ${i < items.length - 1 ? '<hr class="wrapped-divider" />' : ''}
       `).join('');
     }
   },
+
+  // 3 — ENVELOPES (NEW)
+  {
+    id: 'envelopes',
+    isEnvelopes: true,
+    leftHTML: `
+      <img class="veli-mini-img" src="veli mini.JPG"
+           onerror="this.style.cssText='font-size:3rem;background:linear-gradient(135deg,#fce8f0,#fde8d8);display:flex;align-items:center;justify-content:center;width:150px;height:180px;border-radius:10px'"
+           alt="veli mini" />
+      <p class="veli-caption">kita kurang foto bareng 🥺</p>`,
+    rightHTML: `
+      <p class="envelopes-title">tap once to open,<br>tap again to read</p>
+      <ul class="envelopes-list" id="envelopes-list">
+        ${[0,1,2,3,4].map(i => `
+          <li class="envelope-item" id="env-item-${i}" data-idx="${i}">
+            <img class="envelope-img" id="env-img-${i}" src="envelope closed.png"
+                 onerror="this.style.cssText='width:52px;height:36px;background:#f7c5d0;border-radius:4px;display:block'"
+                 alt="envelope ${i+1}" />
+          </li>
+        `).join('')}
+      </ul>
+      <p class="envelopes-title verse">Matthew 5:16<br>
+        in the same way, let your light shine before others, so that they may see your good works<br>and give glory to your Father who is in heaven.</p>`,
+    onMount() {
+      const list = document.getElementById('envelopes-list');
+      if (!list || list.dataset.mounted) return;
+      list.dataset.mounted = '1';
+      list.addEventListener('click', e => {
+        const item = e.target.closest('.envelope-item');
+        if (!item) return;
+        const idx = parseInt(item.dataset.idx, 10);
+        handleEnvelopeTap(idx);
+      });
+    }
+  },
+
+  // 4 — SIGNATURE
   {
     id: 'signature',
     leftHTML: `
       <img class="book-img" src="images3.png"
-           onerror="this.style.cssText='font-size:3.5rem;display:flex;align-items:center;justify-content:center;width:160px;height:200px;border-radius:10px'"
+           onerror="this.style.cssText='font-size:3.5rem;background:linear-gradient(135deg,#fce8f0,#fde8d8);display:flex;align-items:center;justify-content:center;width:160px;height:200px;border-radius:10px'"
            alt="🎨" />`,
     rightHTML: `
       <div class="sig-text">
-        <img class="sig-img book-img" src="dubai1.png"
+        <img class="book-img" src="dubai1.png"
              onerror="this.style.display='none'"
-             alt="" style="margin-bottom:14px" />
+             alt="" style="max-width:100px;margin-bottom:14px" />
         With all the prayers<br>
         and all the love,<br><br>
         <span class="sig-name">From Bryant,</span>
         <span class="sig-name" style="font-size:clamp(.75rem,2.8vw,1rem);color:var(--mauve)">ur koko 😊</span>
-        <img id="veli-anim" src="veli1.png" style="width:60px;height:auto;margin-top:12px" alt="veli" />
+        <img id="veli-anim" src="veli1.png"
+             onerror="this.style.display='none'"
+             style="width:60px;height:auto;margin-top:12px" alt="veli" />
       </div>`
   }
 ];
 
-// ── DOM BUILD ──────────────────────────────
+// ── DOM BUILD ─────────────────────────────────────────────────
 function init() {
   const app = document.getElementById('app');
 
@@ -475,7 +695,7 @@ function init() {
   const book = document.createElement('div');
   book.className = 'book';
 
-  // ── COVER (half-width, on top) ──
+  // COVER
   const coverWrap = document.createElement('div');
   coverWrap.className = 'cover-wrap';
   coverWrap.id = 'cover-wrap';
@@ -494,15 +714,15 @@ function init() {
       <span class="cover-twenty-fallback" style="display:none">20th</span>
       <span class="cover-bday petal">Birthday,<br>Marvelly</span>
     </div>
-    <span class="cover-deco petal" style="top:10%;left:10%"><img src="cake1.png" style="width:50px;height:auto" alt="🎂" /></span>
-    <span class="cover-deco petal" style="top:15%;right:12%"><img src="car1.png" style="width:50px;height:auto" alt="🚗" /></span>
-    <span class="cover-deco petal" style="bottom:18%;left:8%"><img src="rice1.png" style="width:50px;height:auto" alt="🌾" /></span>
-    <span class="cover-deco petal" style="bottom:12%;right:10%"><img src="bouquet1.png" style="width:50px;height:auto" alt="💐" /></span>
+    <span class="cover-deco petal" style="top:10%;left:10%"><img src="cake1.png" style="width:46px;height:auto" alt="🎂" /></span>
+    <span class="cover-deco petal" style="top:15%;right:12%"><img src="car1.png" style="width:46px;height:auto" alt="🚗" /></span>
+    <span class="cover-deco petal" style="bottom:18%;left:8%"><img src="rice1.png" style="width:46px;height:auto" alt="🌾" /></span>
+    <span class="cover-deco petal" style="bottom:12%;right:10%"><img src="bouquet1.png" style="width:46px;height:auto" alt="💐" /></span>
   `;
   coverWrap.appendChild(coverSpine);
   coverWrap.appendChild(coverCard);
 
-  // ── SPREADS ──
+  // SPREADS
   const spreadStack = document.createElement('div');
   spreadStack.className = 'spread-stack';
 
@@ -512,22 +732,23 @@ function init() {
     el.dataset.id = data.id;
 
     const left = document.createElement('div');
-    left.className = 'page left';
+    left.className = data.isEnvelopes ? 'page left envelopes-left' : 'page left';
     left.innerHTML = data.leftHTML;
 
     const right = document.createElement('div');
-    right.className = 'page right';
+    right.className = data.isEnvelopes ? 'page right envelopes-right' : 'page right';
     right.innerHTML = data.rightHTML;
 
     el.appendChild(left);
     el.appendChild(right);
     return el;
   });
+
   spreadEls.forEach(el => spreadStack.appendChild(el));
   book.appendChild(spreadStack);
   book.appendChild(coverWrap);
 
-  // ── NAV ──
+  // NAV
   const navRow = document.createElement('div');
   navRow.className = 'nav-row';
 
@@ -541,7 +762,6 @@ function init() {
 
   const dotsEl = document.createElement('div');
   dotsEl.className = 'page-dots';
-  // dots: 0=cover, 1..n=spreads
   const totalPages = 1 + spreads.length;
   for (let i = 0; i < totalPages; i++) {
     const d = document.createElement('div');
@@ -557,8 +777,8 @@ function init() {
   bookWrap.appendChild(navRow);
   app.appendChild(bookWrap);
 
-  // ── STATE ──
-  let current = 0; // 0=cover, 1..n=spread index
+  // STATE
+  let current = 0;
   let animating = false;
 
   function updateUI() {
@@ -568,55 +788,41 @@ function init() {
   }
   updateUI();
 
-  // ── FLIP TRANSITION ──
+  // FLIP
   function goTo(newIdx, dir) {
     if (animating) return;
     if (newIdx < 0 || newIdx >= totalPages) return;
     animating = true;
 
     const isForward = dir === 'next';
-
-    // What's currently shown
     const outCover  = current === 0 ? coverWrap : null;
     const outSpread = current > 0   ? spreadEls[current - 1] : null;
     const outEl = outCover || outSpread;
 
-    // What's coming in
     const inCover  = newIdx === 0 ? coverWrap : null;
     const inSpread = newIdx > 0   ? spreadEls[newIdx - 1] : null;
-    const inEl = inCover || inSpread;
 
     const outClass = isForward ? 'flip-out'      : 'flip-out-back';
     const inClass  = isForward ? 'flip-in'       : 'flip-in-back';
 
     if (outEl) {
       outEl.classList.add(outClass);
-      outEl.addEventListener('animationend', function handler() {
-        outEl.removeEventListener('animationend', handler);
+      outEl.addEventListener('animationend', function h() {
+        outEl.removeEventListener('animationend', h);
         outEl.classList.remove(outClass);
         if (outCover)  coverWrap.style.display = 'none';
-        if (outSpread) { outSpread.classList.remove('active'); outSpread.style.display = ''; }
+        if (outSpread) { outSpread.classList.remove('active'); }
       }, { once: true });
     }
 
-    // Show incoming
-    if (inCover) {
-      coverWrap.style.display = '';
-      coverWrap.style.opacity = '0';
-      coverWrap.classList.add(inClass);
-    }
-    if (inSpread) {
-      inSpread.classList.add('active');
-      inSpread.style.opacity = '0';
-      inSpread.classList.add(inClass);
-    }
+    if (inCover)  { coverWrap.style.display = ''; coverWrap.style.opacity = '0'; coverWrap.classList.add(inClass); }
+    if (inSpread) { inSpread.classList.add('active'); inSpread.style.opacity = '0'; inSpread.classList.add(inClass); }
 
     setTimeout(() => {
-      if (inCover)  { coverWrap.style.opacity = ''; }
-      if (inSpread) { inSpread.style.opacity = ''; }
+      if (inCover)  coverWrap.style.opacity = '';
+      if (inSpread) inSpread.style.opacity = '';
     }, 30);
 
-    const total = 300 + 280 + 60; // out + in + buffer
     setTimeout(() => {
       if (inCover)  coverWrap.classList.remove(inClass);
       if (inSpread) inSpread.classList.remove(inClass);
@@ -625,12 +831,11 @@ function init() {
       updateUI();
       if (newIdx > 0 && spreads[newIdx-1].onMount) spreads[newIdx-1].onMount();
       if (newIdx === 0) launchConfetti();
-    }, total);
+    }, 660);
   }
 
-  // initial state: show cover, hide spreads
   coverWrap.style.display = '';
-  spreadEls.forEach(el => { el.classList.remove('active'); });
+  spreadEls.forEach(el => el.classList.remove('active'));
 
   prevBtn.addEventListener('click', () => goTo(current - 1, 'prev'));
   nextBtn.addEventListener('click', () => goTo(current + 1, 'next'));
@@ -644,9 +849,7 @@ function init() {
   }, { passive: true });
   book.addEventListener('touchmove', e => {
     if (!swiping) return;
-    const dy = Math.abs(e.touches[0].clientY - startY);
-    const dx = Math.abs(e.touches[0].clientX - startX);
-    if (dy > dx) swiping = false; // vertical scroll, cancel
+    if (Math.abs(e.touches[0].clientY - startY) > Math.abs(e.touches[0].clientX - startX)) swiping = false;
   }, { passive: true });
   book.addEventListener('touchend', e => {
     if (!swiping) return;
@@ -655,45 +858,29 @@ function init() {
     swiping = false;
   }, { passive: true });
 
-  // ── PRESS-AND-HOLD to zoom ──
-  function addHoldZoom(root) {
-    root.addEventListener('pointerdown', e => {
-      const img = e.target.closest('.book-img');
-      if (!img) return;
-      img.classList.add('held');
-      e.preventDefault();
-    });
-    const release = e => {
-      const img = e.target.closest ? e.target.closest('.book-img') : null;
-      document.querySelectorAll('.book-img.held').forEach(i => i.classList.remove('held'));
-    };
-    root.addEventListener('pointerup',     release);
-    root.addEventListener('pointercancel', release);
-    root.addEventListener('pointerleave',  release);
-  }
-  addHoldZoom(document.body);
+  // press-and-hold zoom (only for .book-img, NOT envelope items)
+  document.body.addEventListener('pointerdown', e => {
+    const img = e.target.closest('.book-img');
+    if (!img) return;
+    // don't zoom envelope images
+    if (e.target.closest('.envelope-item')) return;
+    img.classList.add('held');
+  });
+  const releaseZoom = () => document.querySelectorAll('.book-img.held').forEach(i => i.classList.remove('held'));
+  document.body.addEventListener('pointerup',     releaseZoom);
+  document.body.addEventListener('pointercancel', releaseZoom);
+  document.body.addEventListener('pointerleave',  releaseZoom);
 
-  // animate cover-twenty image
-  const coverTwentyImg = document.querySelector('.cover-twenty');
-  if (coverTwentyImg) {
-    let isAlt = false;
-    setInterval(() => {
-      isAlt = !isAlt;
-      coverTwentyImg.src = isAlt ? 'twenty1.png' : 'twenty.png';
-    }, 500);
-  }
-
-  // animate veli image
+  // veli animation
   const veliImg = document.getElementById('veli-anim');
   if (veliImg) {
-    let isAlt = false;
+    let alt = false;
     setInterval(() => {
-      isAlt = !isAlt;
-      veliImg.src = isAlt ? 'veli2.png' : 'veli1.png';
+      alt = !alt;
+      veliImg.src = alt ? 'veli2.png' : 'veli1.png';
     }, 500);
   }
 
-  // initial confetti
   launchConfetti();
 }
 
