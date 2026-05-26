@@ -460,6 +460,7 @@ const spreads = [
         and all the love,<br><br>
         <span class="sig-name">From Bryant,</span>
         <span class="sig-name" style="font-size:clamp(.75rem,2.8vw,1rem);color:var(--mauve)">ur koko 😊</span>
+        <img id="veli-anim" src="veli1.png" style="width:60px;height:auto;margin-top:12px" alt="veli" />
       </div>`
   }
 ];
@@ -679,6 +680,16 @@ function init() {
     setInterval(() => {
       isAlt = !isAlt;
       coverTwentyImg.src = isAlt ? 'twenty1.png' : 'twenty.png';
+    }, 500);
+  }
+
+  // animate veli image
+  const veliImg = document.getElementById('veli-anim');
+  if (veliImg) {
+    let isAlt = false;
+    setInterval(() => {
+      isAlt = !isAlt;
+      veliImg.src = isAlt ? 'veli2.png' : 'veli1.png';
     }, 500);
   }
 
